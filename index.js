@@ -38,6 +38,12 @@ inquirer.prompt([
         message: 'List your collaborators if any'
     },
     {
+        type: 'list',
+        name: 'license',
+        message: 'Which License corresponds to your project?',
+        choices: ['AFLv3', 'Apachev2', 'Artisticv2', 'BSLv1', 'BSD-2-Clause', 'BSD-3-Clause', 'BSD-3-Clause-Clear','BSD-4-Clause', '0BSD', 'CC', 'CC0v1', 'CC-BYv4', 'CC-BY-SAv4','WTFPL','ECLv2','EPLv1','EPLv2','EUPLv1.1','AGPLv3','GPL','GPLv2','GPLv3','LGPL','LGPLv2.1','LGPLv3','ISC','LPPLv1.3c','MS-PL','MIT','MPLv2','OSLv3','PostgreSQL','OFLv1.1','NCSA','Unlicense','Zlib']
+    },
+    {
         type: 'input',
         name: 'github',
         message: 'Insert the link to your Github repo'
@@ -52,13 +58,43 @@ inquirer.prompt([
 ])
 .then((response) =>{
 
-    const { title, description, features, installation, usage, credits, github, linkedin} = response;
+    const { title, description, features, installation, usage, license, credits, github, linkedin} = response;
 
     const readMeContent = `
-    ${response.title}
-    
-    Description
 
+    # ${title}
+    
+    ## Tables of Content
+
+    - [Description](#description)
+    - [Features](#features)
+    - [Installation](#installation)
+    - [Usage](#usage)
+    - [Credits](#credits)
+    - [License](#license)
+    - [Contact](#contact)
+
+    ## Description
+    ${description}
+
+    ## Features
+    ${features}
+
+    ## Installation
+    ${installation}
+
+    ## Usage
+    ${usage}
+
+    ## Credits
+    ${credits}
+
+    ##License
+    
+
+    ## Contact
+    - [GitHub Repo](${github})
+    - [LinkedIn Profile](${linkedin})
     `
    
 
