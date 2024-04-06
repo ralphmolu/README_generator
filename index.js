@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
-const fs = require('filesystem');
-const { generate } = require('rxjs');
+const fs = require('fs');
 
 inquirer.prompt([
     {
@@ -11,12 +10,22 @@ inquirer.prompt([
     {
         type: 'input',
         name: 'description',
-        message: 'Provide a description of your project.'
+        message: 'Provide a description of your project:'
+    },
+    {
+        type: 'input',
+        name: 'screenshots',
+        message: 'Enter the file path(s) for the screenshot(s) you want to add separated by a comma (,). For example /path/for/image1.png, /path/for/image2.png :',
+        filter: function(input){
+            return input.split(',').map(function(path){
+                return path.trim();
+            })
+        }
     },
     {
         type: 'input',
         name: 'features',
-        message: 'List the features of your application separated by a comma',
+        message: 'List the features of your application separated by a comma:',
         filter: function(input){ return input.split(',').map(function(feature){
             return feature.trim();
         })
@@ -30,12 +39,12 @@ inquirer.prompt([
     {
         type: 'input',
         name: 'usage',
-        message: 'Provide instructions and examples of use'
+        message: 'Provide instructions and examples of use:'
     },
     {
         type: 'input',
         name: 'credits',
-        message: 'List your collaborators if any'
+        message: 'List your collaborators if any:'
     },
     {
         type: 'list',
@@ -46,59 +55,70 @@ inquirer.prompt([
     {
         type: 'input',
         name: 'github',
-        message: 'Insert the link to your Github repo'
+        message: 'Insert the URL to your Github repo:'
     },
     {
         type: 'input',
         name: 'linkedin',
-        message: 'Insert the link to your LinkedIn profile'
+        message: 'Insert the URL to your LinkedIn profile:'
     },
     
     
 ])
 .then((response) =>{
 
-    const { title, description, features, installation, usage, license, credits, github, linkedin} = response;
+    //destructure the response object
+    const { title, description, screenshots, features, installation, usage, license, credits, github, linkedin} = response;
 
+    // check if the user has any screenshot paths to add, if not add an empty string.
+    const appPreview = screenshots.length > 0 ? `
+    ## App Preview
+    
+    ${screenshots.map(function(path){
+        return `
+        ![Screenshot](${path})`;
+    }).join('\n\n')}
+    ` : '';
+    
     const readMeContent = `
 
-    # ${title}
+# ${title}
     
-    ## Tables of Content
+## Tables of Content
 
-    - [Description](#description)
-    - [Features](#features)
-    - [Installation](#installation)
-    - [Usage](#usage)
-    - [Credits](#credits)
-    - [License](#license)
-    - [Contact](#contact)
+- [Description](#description)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Credits](#credits)
+- [License](#license)
+- [Contact](#contact)
 
-    ## Description
-    ${description}
+## Description
+${description}
 
-    ## Features
-    ${features}
+## Features
+${features}
 
-    ## Installation
-    ${installation}
+## Installation
+${installation}
 
-    ## Usage
-    ${usage}
+## Usage
+${usage}
 
-    ## Credits
-    ${credits}
+## Credits
+${credits}
 
-    ##License
-    
+# License
+${license}
 
-    ## Contact
-    - [GitHub Repo](${github})
-    - [LinkedIn Profile](${linkedin})
-    `
+## Contact
+- [GitHub Repo](${github})
+- [LinkedIn Profile](${linkedin})
+`
    
 
     fs.writeFile('README.md', readMeContent, (error) => {
-        error ? console.log(error) : console.log(response)
+        error ? console.log(error) : console.log('README.md successfully created')
     })
 });
