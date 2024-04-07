@@ -72,13 +72,12 @@ inquirer.prompt([
 
     // check if the user has any screenshot paths to add, if not add an empty string.
     const appPreview = screenshots.length > 0 ? `
-    ## App Preview
+## App Preview
     
-    ${screenshots.map(function(path){
-        return `
-        ![Screenshot](${path})`;
+${screenshots.map(function(path){
+        return `![Screenshot](${path})`;
     }).join('\n\n')}
-    ` : '';
+    ` : 'No screenshots available';
     
     const readMeContent = `
 
@@ -87,6 +86,7 @@ inquirer.prompt([
 ## Tables of Content
 
 - [Description](#description)
+- [App Preview](#app-preview)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -96,6 +96,8 @@ inquirer.prompt([
 
 ## Description
 ${description}
+
+${appPreview}
 
 ## Features
 ${features}
@@ -122,3 +124,4 @@ ${license}
         error ? console.log(error) : console.log('README.md successfully created')
     })
 });
+
