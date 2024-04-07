@@ -1,6 +1,8 @@
+//dependencies
 const inquirer = require('inquirer');
 const fs = require('fs');
 
+//user prompts
 inquirer.prompt([
     {
         type: 'input',
@@ -26,6 +28,7 @@ inquirer.prompt([
         type: 'input',
         name: 'features',
         message: 'List the features of your application separated by a comma:',
+        // function that takes in multiple user-input features
         filter: function(input){ return input.split(',').map(function(feature){
             return feature.trim();
         })
@@ -70,7 +73,7 @@ inquirer.prompt([
     //destructure the response object
     const { title, description, screenshots, features, installation, usage, license, credits, github, linkedin} = response;
 
-    // check if the user has any screenshot paths to add, if not add an empty string.
+    // check if the user has any screenshot paths to add.
     const appPreview = screenshots.length > 0 ? `
 ## App Preview
     
@@ -119,7 +122,7 @@ ${license}
 - [LinkedIn Profile](${linkedin})
 `
    
-
+    // creating a readme file
     fs.writeFile('README.md', readMeContent, (error) => {
         error ? console.log(error) : console.log('README.md successfully created')
     })
